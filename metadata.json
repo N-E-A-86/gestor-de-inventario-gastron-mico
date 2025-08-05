@@ -1,0 +1,5 @@
+{
+  "name": "Gestor de Inventario Gastronómico",
+  "description": "Una aplicación web para gestionar un inventario gastronómico, crear recetas, calcular costos y actualizar precios masivamente mediante IA.",
+  "requestFramePermissions": []
+}
