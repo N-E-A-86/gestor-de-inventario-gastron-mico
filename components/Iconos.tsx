@@ -1,4 +1,3 @@
-
 import React from 'react';
 
 // Un componente genérico para encapsular los íconos
@@ -51,4 +50,17 @@ export const IconoSubir: React.FC<{ className?: string }> = ({ className }) => (
 
 export const IconoLibro: React.FC<{ className?: string }> = ({ className }) => (
   <IconoBase className={className}><path fillRule="evenodd" d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25ZM9.172 10.34a.75.75 0 0 1 1.06 0l3 3a.75.75 0 0 1-1.06 1.06l-3-3a.75.75 0 0 1 0-1.06Zm-1.5 1.5a.75.75 0 0 1 0-1.06l3-3a.75.75 0 0 1 1.06 1.06l-3 3a.75.75 0 0 1-1.06 0Z" clipRule="evenodd" /></IconoBase>
+);
+
+// --- Nuevos Iconos ---
+export const IconoAlerta: React.FC<{ className?: string }> = ({ className }) => (
+  <IconoBase className={className}><path fillRule="evenodd" d="M9.401 3.003c1.155-2 4.043-2 5.197 0l7.5 13c1.155 2-.77 4.5-3.299 4.5H5.197c-2.529 0-4.454-2.5-3.299-4.5l7.5-13Zm.933 11.493a.75.75 0 1 0-1.5 0v.001a.75.75 0 0 0 1.5 0ZM12 15.75a.75.75 0 0 1 .75-.75h.001a.75.75 0 0 1 0 1.5H12.75a.75.75 0 0 1-.75-.75Z" clipRule="evenodd" /></IconoBase>
+);
+
+export const IconoUsuario: React.FC<{ className?: string }> = ({ className }) => (
+    <IconoBase className={className}><path fillRule="evenodd" d="M18.685 19.097A9.723 9.723 0 0 0 21.75 12c0-5.385-4.365-9.75-9.75-9.75S2.25 6.615 2.25 12a9.723 9.723 0 0 0 3.065 7.097A9.716 9.716 0 0 0 12 21.75a9.716 9.716 0 0 0 6.685-2.653Zm-12.54-1.285A7.486 7.486 0 0 1 12 15a7.486 7.486 0 0 1 5.855 2.812A8.224 8.224 0 0 1 12 20.25a8.224 8.224 0 0 1-5.855-2.438ZM15.75 9a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0Z" clipRule="evenodd" /></IconoBase>
+);
+
+export const IconoCerrarSesion: React.FC<{ className?: string }> = ({ className }) => (
+    <IconoBase className={className}><path fillRule="evenodd" d="M7.5 3.75A1.5 1.5 0 0 0 6 5.25v13.5a1.5 1.5 0 0 0 1.5 1.5h6a1.5 1.5 0 0 0 1.5-1.5V15a.75.75 0 0 1 1.5 0v3.75a3 3 0 0 1-3 3h-6a3 3 0 0 1-3-3V5.25a3 3 0 0 1 3-3h6a3 3 0 0 1 3 3V9A.75.75 0 0 1 15 9V5.25a1.5 1.5 0 0 0-1.5-1.5h-6Zm10.72 4.72a.75.75 0 0 1 0 1.06l-3 3a.75.75 0 0 1-1.06-1.06l1.72-1.72H9a.75.75 0 0 1 0-1.5h7.94l-1.72-1.72a.75.75 0 0 1 1.06-1.06l3 3Z" clipRule="evenodd" /></IconoBase>
 );

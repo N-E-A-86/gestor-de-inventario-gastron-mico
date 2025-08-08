@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import type { ArticuloInventario } from '../types';
 import Modal from './Modal';
-import { IconoEditar, IconoBasura } from './Iconos';
+import { IconoEditar, IconoBasura, IconoAlerta } from './Iconos';
 
 // Propiedades que el componente VistaInventario recibe
 interface VistaInventarioProps {
@@ -74,7 +74,7 @@ const VistaInventario: React.FC<VistaInventarioProps> = ({ articulos, agregarArt
           <thead className="border-b border-gray-200 dark:border-gray-700">
             <tr>
               <th className="p-4">Nombre</th>
-              <th className="p-4">Cantidad</th>
+              <th className="p-4">Stock</th>
               <th className="p-4">Unidad</th>
               <th className="p-4">Precio Unitario</th>
               <th className="p-4 text-right">Acciones</th>
@@ -82,18 +82,42 @@ const VistaInventario: React.FC<VistaInventarioProps> = ({ articulos, agregarArt
           </thead>
           <tbody>
             {articulos.length > 0 ? (
-              articulos.map((articulo) => (
-                <tr key={articulo.id} className="border-b border-gray-200 dark:border-gray-700 hover:bg-fondo-claro dark:hover:bg-fondo-oscuro">
-                  <td className="p-4 font-medium">{articulo.nombre}</td>
-                  <td className="p-4">{articulo.cantidad}</td>
-                  <td className="p-4">{articulo.unidad}</td>
-                  <td className="p-4">${articulo.precioUnitario.toFixed(2)}</td>
-                  <td className="p-4 flex justify-end gap-2">
-                    <button onClick={() => abrirModalParaEditar(articulo)} className="p-2 text-texto-secundario-claro dark:text-texto-secundario-oscuro hover:text-blue-500"><IconoEditar /></button>
-                    <button onClick={() => eliminarArticulo(articulo.id)} className="p-2 text-texto-secundario-claro dark:text-texto-secundario-oscuro hover:text-red-500"><IconoBasura /></button>
-                  </td>
-                </tr>
-              ))
+              articulos.map((articulo) => {
+                // --- Lógica de Alerta de Stock Bajo ---
+                // Condición para stock bajo: solo para artículos contados por 'unidad' que tengan 3 o menos.
+                const conStockBajo = articulo.unidad === 'unidad' && articulo.cantidad <= 3;
+
+                // Clases CSS condicionales para resaltar la fila con un color de alerta.
+                const clasesFila = [
+                  "border-b border-gray-200 dark:border-gray-700 transition-colors",
+                  conStockBajo
+                    ? "bg-red-100 dark:bg-red-900/40 hover:bg-red-200 dark:hover:bg-red-900/60"
+                    : "hover:bg-fondo-claro dark:hover:bg-fondo-oscuro",
+                ].join(" ");
+
+                return (
+                  <tr key={articulo.id} className={clasesFila}>
+                    <td className="p-4 font-medium flex items-center gap-3">
+                      {/* El ícono de alerta se muestra solo si el stock es bajo. */}
+                      {conStockBajo && (
+                        <span title="Stock bajo">
+                          <IconoAlerta className="text-red-500 w-5 h-5 flex-shrink-0" />
+                        </span>
+                      )}
+                      {articulo.nombre}
+                    </td>
+                    <td className={`p-4 font-semibold ${conStockBajo ? 'text-red-600 dark:text-red-400' : ''}`}>
+                        {articulo.cantidad}
+                    </td>
+                    <td className="p-4">{articulo.unidad}</td>
+                    <td className="p-4">${articulo.precioUnitario.toFixed(2)}</td>
+                    <td className="p-4 flex justify-end gap-2">
+                      <button onClick={() => abrirModalParaEditar(articulo)} className="p-2 text-texto-secundario-claro dark:text-texto-secundario-oscuro hover:text-blue-500"><IconoEditar /></button>
+                      <button onClick={() => eliminarArticulo(articulo.id)} className="p-2 text-texto-secundario-claro dark:text-texto-secundario-oscuro hover:text-red-500"><IconoBasura /></button>
+                    </td>
+                  </tr>
+                );
+              })
             ) : (
               <tr>
                 <td colSpan={5} className="p-8 text-center text-texto-secundario-claro dark:text-texto-secundario-oscuro">
@@ -114,7 +138,7 @@ const VistaInventario: React.FC<VistaInventarioProps> = ({ articulos, agregarArt
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <label htmlFor="cantidad" className="block text-sm font-medium mb-1">Cantidad</label>
+                <label htmlFor="cantidad" className="block text-sm font-medium mb-1">Cantidad en Stock</label>
                 <input type="number" name="cantidad" id="cantidad" step="0.01" defaultValue={articuloActual?.cantidad || ''} required className="w-full bg-fondo-claro dark:bg-fondo-oscuro border border-gray-300 dark:border-gray-600 rounded-md p-2"/>
               </div>
               <div>
