@@ -5,6 +5,7 @@ import 'firebase/compat/functions';
 import 'firebase/compat/auth'; // Se añade el servicio de autenticación
 
 // Configuración real del proyecto de Firebase del usuario.
+// Este objeto contiene las credenciales correctas para conectar con el backend.
 const firebaseConfig = {
   apiKey: "AIzaSyC-3EtommEekqajyq_3C-qj1xen08QAzwk",
   authDomain: "inventario-app-5.firebaseapp.com",
