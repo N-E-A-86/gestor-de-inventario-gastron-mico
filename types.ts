@@ -1,24 +1,37 @@
-
 // types.ts
 
 /**
- * Representa un artículo único en el inventario.
+ * Define las unidades base en las que se almacena y se costea un artículo en el inventario.
+ */
+export type UnidadBaseInventario = 'kg' | 'l' | 'unidad';
+
+/**
+ * Define todas las unidades posibles que se pueden usar en una receta.
+ */
+export type UnidadReceta = 'g' | 'kg' | 'ml' | 'l' | 'unidad';
+
+/**
+ * Representa un artículo único en el inventario. El precioUnitario siempre
+ * corresponde a la unidad base (ej., precio por kg, por l, o por unidad).
  */
 export interface ArticuloInventario {
   id: string;
   nombre: string;
-  unidad: 'kg' | 'g' | 'l' | 'ml' | 'unidad';
+  // La unidad de almacenamiento y costeo principal.
+  unidad: UnidadBaseInventario;
   cantidad: number;
-  precioUnitario: number; // Precio por la unidad base (ej. precio por kg, por litro, etc.)
+  precioUnitario: number;
 }
 
 /**
- * Representa un ingrediente dentro de una receta, vinculando un artículo del inventario
- * y la cantidad necesaria para la receta.
+ * Representa un ingrediente dentro de una receta. Permite usar unidades
+ * diferentes a las del inventario (ej., usar 'g' para un artículo costeado en 'kg').
  */
 export interface IngredienteReceta {
   articuloId: string;
-  cantidad: number; // La cantidad del ingrediente en su unidad base (ej. 0.5 kg)
+  cantidad: number;
+  // La unidad específica para este ingrediente en esta receta.
+  unidad: UnidadReceta;
 }
 
 /**

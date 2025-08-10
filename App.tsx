@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { Routes, Route, NavLink, useLocation } from 'react-router-dom';
+import VistaHorarios from './components/VistaHorarios';
 import type { ArticuloInventario, Receta } from './types';
 import VistaInventario from './components/VistaInventario';
 import VistaRecetas from './components/VistaRecetas';
@@ -224,6 +225,7 @@ const App: React.FC = () => {
             <EnlaceNavegacion to="/">Inventario</EnlaceNavegacion>
             <EnlaceNavegacion to="/recetas">Recetas</EnlaceNavegacion>
             <EnlaceNavegacion to="/actualizar-precios">Actualizar Precios</EnlaceNavegacion>
+              <EnlaceNavegacion to="/horarios">Horarios</EnlaceNavegacion>
           </div>
           <div className="flex items-center gap-2">
             <span className="hidden lg:inline text-sm text-texto-secundario-claro dark:text-texto-secundario-oscuro">{user.displayName || user.email}</span>
@@ -242,6 +244,7 @@ const App: React.FC = () => {
           <Route path="/" element={<VistaInventario articulos={articulos} agregarArticulo={agregarArticulo} editarArticulo={editarArticulo} eliminarArticulo={eliminarArticulo} />} />
           <Route path="/recetas" element={<VistaRecetas recetas={recetas} articulos={articulos} agregarReceta={agregarReceta} eliminarReceta={eliminarReceta} />} />
           <Route path="/actualizar-precios" element={<VistaActualizarPrecios articulos={articulos} actualizarPrecios={actualizarPreciosMasivamente} />} />
+            <Route path="/horarios" element={<VistaHorarios />} />
         </Routes>
       </main>
 

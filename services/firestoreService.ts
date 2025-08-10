@@ -58,3 +58,27 @@ export const deleteReceta = async (userId: string, id: string): Promise<void> =>
     const recetaDoc = getRecetasCollection(userId).doc(id);
     await recetaDoc.delete();
 };
+
+
+// --- Funciones para Horarios Laborales (por usuario) ---
+const getHorariosCollection = (userId: string) => db.collection('users').doc(userId).collection('horarios');
+
+export async function registrarHorario(userId: string, fecha: string, horaEntrada: string, horaSalida: string) {
+    const horasExtras = calcularHorasExtras(horaEntrada, horaSalida);
+    const registro = { fecha, horaEntrada, horaSalida, horasExtras };
+    const docRef = await getHorariosCollection(userId).add(registro);
+    return { id: docRef.id, ...registro };
+}
+
+export async function obtenerHorarios(userId: string) {
+    const snapshot = await getHorariosCollection(userId).orderBy('fecha', 'desc').get();
+    return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+}
+
+function calcularHorasExtras(horaEntrada: string, horaSalida: string): number {
+    // Jornada normal de 8 horas
+    const entrada = new Date(`1970-01-01T${horaEntrada}:00`);
+    const salida = new Date(`1970-01-01T${horaSalida}:00`);
+    const horasTrabajadas = (salida.getTime() - entrada.getTime()) / (1000 * 60 * 60);
+    return Math.max(0, horasTrabajadas - 8);
+}

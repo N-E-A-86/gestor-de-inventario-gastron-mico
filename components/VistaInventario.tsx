@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import type { ArticuloInventario } from '../types';
+import type { ArticuloInventario, UnidadBaseInventario } from '../types';
 import Modal from './Modal';
 import { IconoEditar, IconoBasura, IconoAlerta } from './Iconos';
 
@@ -38,7 +38,7 @@ const VistaInventario: React.FC<VistaInventarioProps> = ({ articulos, agregarArt
     const formData = new FormData(evento.currentTarget);
     const datosArticulo = {
       nombre: formData.get('nombre') as string,
-      unidad: formData.get('unidad') as 'kg' | 'g' | 'l' | 'ml' | 'unidad',
+      unidad: formData.get('unidad') as UnidadBaseInventario,
       cantidad: parseFloat(formData.get('cantidad') as string),
       precioUnitario: parseFloat(formData.get('precioUnitario') as string),
     };
@@ -145,9 +145,7 @@ const VistaInventario: React.FC<VistaInventarioProps> = ({ articulos, agregarArt
                 <label htmlFor="unidad" className="block text-sm font-medium mb-1">Unidad</label>
                 <select name="unidad" id="unidad" defaultValue={articuloActual?.unidad || 'unidad'} required className="w-full bg-fondo-claro dark:bg-fondo-oscuro border border-gray-300 dark:border-gray-600 rounded-md p-2">
                   <option value="kg">Kilogramo (kg)</option>
-                  <option value="g">Gramo (g)</option>
                   <option value="l">Litro (l)</option>
-                  <option value="ml">Mililitro (ml)</option>
                   <option value="unidad">Unidad</option>
                 </select>
               </div>
@@ -167,4 +165,4 @@ const VistaInventario: React.FC<VistaInventarioProps> = ({ articulos, agregarArt
   );
 };
 
-export default VistaInventario;
+export default VistaInventario;const conStockBajo = articulo.cantidad <= 3;
