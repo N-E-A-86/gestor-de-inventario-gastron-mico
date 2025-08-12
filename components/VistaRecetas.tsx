@@ -9,6 +9,7 @@ interface VistaRecetasProps {
   recetas: Receta[];
   articulos: ArticuloInventario[];
   agregarReceta: (receta: Omit<Receta, 'id'>) => void;
+  editarReceta?: (receta: Receta) => void;
   eliminarReceta: (id: string) => void;
 }
 
@@ -19,10 +20,11 @@ const unidadesCompatibles: Record<UnidadBaseInventario, UnidadReceta[]> = {
     unidad: ['unidad'],
 };
 
-const VistaRecetas: React.FC<VistaRecetasProps> = ({ recetas, articulos, agregarReceta, eliminarReceta }) => {
+const VistaRecetas: React.FC<VistaRecetasProps> = ({ recetas, articulos, agregarReceta, eliminarReceta, editarReceta }) => {
   const [modalAbierto, setModalAbierto] = useState(false);
   const [nombreReceta, setNombreReceta] = useState('');
   const [ingredientes, setIngredientes] = useState<IngredienteReceta[]>([]);
+  const [editandoId, setEditandoId] = useState<string | null>(null);
 
   const mapaArticulos = useMemo(() => {
     return new Map(articulos.map(articulo => [articulo.id, articulo]));
@@ -51,12 +53,23 @@ const VistaRecetas: React.FC<VistaRecetasProps> = ({ recetas, articulos, agregar
     }, 0);
   };
   
-  const abrirModal = () => setModalAbierto(true);
+  const abrirModal = () => {
+    setEditandoId(null);
+    setModalAbierto(true);
+  };
+
+  const abrirModalEdicion = (receta: Receta) => {
+    setEditandoId(receta.id);
+    setNombreReceta(receta.nombre);
+    setIngredientes(receta.ingredientes.map(ing => ({ ...ing }))); // Copia profunda
+    setModalAbierto(true);
+  };
   
   const cerrarModalYReiniciar = () => {
     setModalAbierto(false);
     setNombreReceta('');
     setIngredientes([]);
+    setEditandoId(null);
   };
 
   const agregarIngrediente = () => {
@@ -93,13 +106,21 @@ const VistaRecetas: React.FC<VistaRecetasProps> = ({ recetas, articulos, agregar
     setIngredientes(ingredientes.filter((_, i) => i !== index));
   };
 
-  const manejarSubmit = (evento: React.FormEvent<HTMLFormElement>) => {
+  const manejarSubmit = async (evento: React.FormEvent<HTMLFormElement>) => {
     evento.preventDefault();
     if (!nombreReceta.trim() || ingredientes.length === 0 || ingredientes.some(ing => ing.cantidad <= 0)) {
       alert("La receta debe tener un nombre y al menos un ingrediente con cantidad mayor a cero.");
       return;
     }
-    agregarReceta({ nombre: nombreReceta, ingredientes });
+    if (editandoId) {
+      // Editar receta existente
+      if (typeof editarReceta === 'function') {
+        await editarReceta({ id: editandoId, nombre: nombreReceta, ingredientes });
+      }
+    } else {
+      // Crear nueva receta
+      await agregarReceta({ nombre: nombreReceta, ingredientes });
+    }
     cerrarModalYReiniciar();
   };
   
@@ -124,9 +145,12 @@ const VistaRecetas: React.FC<VistaRecetasProps> = ({ recetas, articulos, agregar
             return (
               <div key={receta.id} className="bg-superficie-clara dark:bg-superficie-oscura shadow-lg rounded-lg p-5 flex flex-col justify-between">
                 <div>
-                  <div className="flex justify-between items-start">
+                  <div className="flex justify-between items-start gap-2">
                     <h2 className="text-xl font-bold mb-2">{receta.nombre}</h2>
-                    <button onClick={() => eliminarReceta(receta.id)} className="text-texto-secundario-claro dark:text-texto-secundario-oscuro hover:text-red-500"><IconoBasura /></button>
+                    <div className="flex gap-2">
+                      <button onClick={() => abrirModalEdicion(receta)} className="text-blue-500 hover:text-blue-700 font-semibold px-2">Editar</button>
+                      <button onClick={() => eliminarReceta(receta.id)} className="text-texto-secundario-claro dark:text-texto-secundario-oscuro hover:text-red-500"><IconoBasura /></button>
+                    </div>
                   </div>
                   <ul className="mb-4 space-y-1">
                     {receta.ingredientes.map((ing, index) => {

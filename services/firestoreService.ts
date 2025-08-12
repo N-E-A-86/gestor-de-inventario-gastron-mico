@@ -54,9 +54,16 @@ export const addReceta = async (userId: string, receta: Omit<Receta, 'id'>): Pro
     return { id: docRef.id, ...receta };
 };
 
+
 export const deleteReceta = async (userId: string, id: string): Promise<void> => {
     const recetaDoc = getRecetasCollection(userId).doc(id);
     await recetaDoc.delete();
+};
+
+// Editar una receta existente en Firestore
+export const updateReceta = async (userId: string, id: string, receta: Partial<Receta>): Promise<void> => {
+    const recetaDoc = getRecetasCollection(userId).doc(id);
+    await recetaDoc.update(receta);
 };
 
 

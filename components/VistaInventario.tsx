@@ -84,8 +84,8 @@ const VistaInventario: React.FC<VistaInventarioProps> = ({ articulos, agregarArt
             {articulos.length > 0 ? (
               articulos.map((articulo) => {
                 // --- Lógica de Alerta de Stock Bajo ---
-                // Condición para stock bajo: solo para artículos contados por 'unidad' que tengan 3 o menos.
-                const conStockBajo = articulo.unidad === 'unidad' && articulo.cantidad <= 3;
+                // Condición para stock bajo: cualquier producto con 3 o menos unidades.
+                const conStockBajo = articulo.cantidad <= 3;
 
                 // Clases CSS condicionales para resaltar la fila con un color de alerta.
                 const clasesFila = [
@@ -165,4 +165,4 @@ const VistaInventario: React.FC<VistaInventarioProps> = ({ articulos, agregarArt
   );
 };
 
-export default VistaInventario;const conStockBajo = articulo.cantidad <= 3;
+export default VistaInventario;

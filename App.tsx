@@ -128,7 +128,10 @@ const App: React.FC = () => {
     }
   }, [user]);
 
+
   // --- Lógica de negocio para Recetas ---
+
+  // Agregar una nueva receta
   const agregarReceta = useCallback(async (receta: Omit<Receta, 'id'>) => {
     if (!user) return;
     try {
@@ -139,6 +142,7 @@ const App: React.FC = () => {
     }
   }, [user]);
 
+  // Eliminar una receta existente
   const eliminarReceta = useCallback(async (id: string) => {
     if (!user) return;
      if (window.confirm('¿Estás seguro de que quieres eliminar esta receta?')) {
@@ -149,6 +153,24 @@ const App: React.FC = () => {
             console.error("Error al eliminar receta:", error);
         }
      }
+  }, [user]);
+
+  // Editar una receta existente (actualiza en Firestore y recarga el estado)
+  const editarReceta = useCallback(async (recetaEditada: Receta) => {
+    // Verifica que haya usuario autenticado
+    if (!user) return;
+    try {
+      // Actualiza la receta en Firestore
+      await firestoreService.updateReceta(user.uid, recetaEditada.id, {
+        nombre: recetaEditada.nombre,
+        ingredientes: recetaEditada.ingredientes
+      });
+      // Recarga todas las recetas desde Firestore para asegurar sincronización
+      const recetasActualizadas = await firestoreService.getRecetas(user.uid);
+      setRecetas(recetasActualizadas);
+    } catch (error) {
+      console.error("Error al editar receta:", error);
+    }
   }, [user]);
 
   // --- Lógica de negocio para Actualización de Precios ---
@@ -242,7 +264,8 @@ const App: React.FC = () => {
       <main className="flex-grow">
         <Routes>
           <Route path="/" element={<VistaInventario articulos={articulos} agregarArticulo={agregarArticulo} editarArticulo={editarArticulo} eliminarArticulo={eliminarArticulo} />} />
-          <Route path="/recetas" element={<VistaRecetas recetas={recetas} articulos={articulos} agregarReceta={agregarReceta} eliminarReceta={eliminarReceta} />} />
+          {/* Se pasa la función editarReceta como prop para habilitar la edición de recetas */}
+          <Route path="/recetas" element={<VistaRecetas recetas={recetas} articulos={articulos} agregarReceta={agregarReceta} eliminarReceta={eliminarReceta} editarReceta={editarReceta} />} />
           <Route path="/actualizar-precios" element={<VistaActualizarPrecios articulos={articulos} actualizarPrecios={actualizarPreciosMasivamente} />} />
             <Route path="/horarios" element={<VistaHorarios />} />
         </Routes>
